@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crane, Tufts & Recourse Debt — Practice Quiz</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f5f5f3; min-height: 100vh; padding: 2rem 1rem; }
+.container { max-width: 740px; margin: 0 auto; background: #fff; border-radius: 12px; border: 1px solid #e0e0d8; padding: 2rem; }
+h1 { font-size: 20px; font-weight: 600; color: #1a1a18; margin-bottom: 0.25rem; }
+.subtitle { font-size: 14px; color: #666; margin-bottom: 1.5rem; }
+.progress-bg { height: 4px; background: #e0e0d8; border-radius: 2px; margin-bottom: 1.5rem; }
+.progress-fill { height: 4px; background: #185FA5; border-radius: 2px; transition: width 0.3s; }
+.nav-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.pill { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ccc; background: #fff; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #666; transition: all 0.15s; }
+.pill.current { border: 2px solid #185FA5; color: #185FA5; }
+.pill.correct { background: #eaf3de; border-color: #3B6D11; color: #3B6D11; }
+.pill.incorrect { background: #fcebeb; border-color: #A32D2D; color: #A32D2D; }
+.pill.skipped { background: #f5f5f3; }
+.q-label { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+.q-text { font-size: 15px; line-height: 1.7; color: #1a1a18; margin-bottom: 1.5rem; }
+.choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+.choice { border: 1px solid #e0e0d8; border-radius: 8px; padding: 12px 16px; font-size: 14px; line-height: 1.5; cursor: pointer; color: #1a1a18; background: #fff; text-align: left; transition: border-color 0.15s, background 0.15s; font-family: Arial, sans-serif; }
+.choice:hover:not(:disabled) { border-color: #aaa; background: #f9f9f7; }
+.choice.correct-answer { border-color: #3B6D11; background: #eaf3de; color: #27500A; font-weight: 500; }
+.choice.wrong-answer { border-color: #A32D2D; background: #fcebeb; color: #791F1F; }
+.choice:disabled { cursor: default; }
+.btn-row { display: flex; gap: 8px; align-items: center; }
+.btn { border: 1px solid #ccc; border-radius: 8px; padding: 8px 18px; font-size: 14px; font-weight: 500; cursor: pointer; background: #fff; color: #1a1a18; transition: background 0.15s; font-family: Arial, sans-serif; }
+.btn:hover:not(:disabled) { background: #f5f5f3; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn:active:not(:disabled) { transform: scale(0.98); }
+.feedback { margin-top: 1.25rem; border-radius: 10px; padding: 1rem 1.25rem; font-size: 14px; line-height: 1.7; border: 1px solid; }
+.feedback.correct { background: #eaf3de; border-color: #639922; }
+.feedback.incorrect { background: #fcebeb; border-color: #E24B4A; }
+.feedback-title { font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+.feedback.correct .feedback-title { color: #27500A; }
+.feedback.incorrect .feedback-title { color: #791F1F; }
+.feedback-body { color: #1a1a18; font-size: 14px; line-height: 1.7; }
+.score-card { background: #f5f5f3; border-radius: 10px; padding: 1.5rem; text-align: center; margin-top: 1.5rem; }
+.score-num { font-size: 42px; font-weight: 600; color: #1a1a18; }
+.score-label { font-size: 14px; color: #666; margin-top: 4px; }
+.divider { height: 1px; background: #e0e0d8; margin: 1.5rem 0; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Crane, Tufts &amp; Recourse Debt</h1>
+  <div class="subtitle">Federal Income Tax — Practice Quiz</div>
+  <div class="progress-bg"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+  <div class="nav-pills" id="nav"></div>
+  <div id="quiz-body"></div>
+</div>
+
+<script>
+const problems = [
+  {
+    num: 1,
+    q: "Taxpayer purchased a building for $500,000, financing the purchase with $100,000 cash and a $400,000 nonrecourse mortgage. Taxpayer took $150,000 in depreciation deductions, reducing the adjusted basis to $350,000. The property declines in value to $300,000. The lender agrees to take the property in full satisfaction of the outstanding $400,000 nonrecourse debt. What are the federal income tax consequences to Taxpayer?",
+    choices: [
+      "$50,000 recognized loss",
+      "$50,000 recognized gain",
+      "$100,000 recognized gain",
+      "No gain or loss; the lender absorbs the shortfall"
+    ],
+    correct: 1,
+    feedback: "Under Commissioner v. Tufts, when the nonrecourse debt exceeds FMV, the full debt — not FMV — is the amount realized. Amount realized = $400,000 (full nonrecourse debt). Adjusted basis = $350,000. Gain = $50,000. Although the property is worth only $300,000, the lender (not the taxpayer) absorbs the $100,000 shortfall. The taxpayer borrowed $400,000 and is only paying back $300,000 worth of property — the taxpayer is actually coming out ahead economically."
+  },
+  {
+    num: 2,
+    q: "Taxpayer purchased land for $300,000, paying $60,000 cash and signing a $240,000 nonrecourse note. The land is not depreciable and has not been depreciated. The land declines in value to $200,000, and the lender takes the land in full satisfaction of the $240,000 nonrecourse debt. What are the federal income tax consequences to Taxpayer?",
+    choices: [
+      "$40,000 recognized loss",
+      "$60,000 recognized loss",
+      "$60,000 recognized gain",
+      "No gain or loss"
+    ],
+    correct: 1,
+    feedback: "Under Tufts, the full nonrecourse debt is the amount realized. Amount realized = $240,000. Adjusted basis = $300,000 (no depreciation — land is not depreciable). Realized and recognized loss = $60,000. This loss is real: the taxpayer invested $60,000 in cash equity that is now unrecoverable."
+  },
+  {
+    num: 3,
+    q: "Taxpayer purchased rental property for $600,000, funded entirely with a $600,000 nonrecourse mortgage (no cash down). Taxpayer took $200,000 in depreciation, reducing adjusted basis to $400,000. The property is now worth $450,000. The lender takes the property in full satisfaction of the $600,000 nonrecourse debt. What are the federal income tax consequences to Taxpayer?",
+    choices: [
+      "$50,000 recognized gain",
+      "$150,000 recognized gain",
+      "$200,000 recognized gain",
+      "No gain — taxpayer put no cash in"
+    ],
+    correct: 2,
+    feedback: "Under Crane, the nonrecourse debt was included in the taxpayer's original basis of $600,000, which supported the $200,000 in depreciation deductions. On disposition, the full nonrecourse debt is the amount realized. Amount realized = $600,000. Adjusted basis = $400,000. Gain = $200,000. Because the taxpayer's basis included the $600,000 debt (enabling the depreciation), that same debt must be included in amount realized on disposition."
+  },
+  {
+    num: 4,
+    q: "Taxpayer purchased property for $500,000 ($100,000 cash and a $400,000 nonrecourse mortgage). Taxpayer took $80,000 in depreciation, reducing adjusted basis to $420,000. Taxpayer sells the property to Buyer for $50,000 cash. Buyer takes the property subject to the $400,000 nonrecourse mortgage. What are the federal income tax consequences to Taxpayer?",
+    choices: [
+      "$50,000 recognized loss",
+      "$30,000 recognized gain",
+      "$50,000 recognized gain",
+      "$80,000 recognized gain"
+    ],
+    correct: 1,
+    feedback: "Under Crane, when a buyer takes property subject to a nonrecourse mortgage, the outstanding mortgage balance is included in the seller's amount realized. Amount realized = $50,000 (cash) + $400,000 (nonrecourse debt taken subject to) = $450,000. Adjusted basis = $420,000. Gain = $30,000."
+  },
+  {
+    num: 5,
+    q: "Taxpayer purchased property for $400,000 ($50,000 cash and a $350,000 recourse mortgage). Taxpayer took $100,000 in depreciation, reducing adjusted basis to $300,000. The property is now worth $350,000 — exactly equal to the outstanding recourse debt. The lender forecloses and the property fully satisfies the $350,000 debt. What are the federal income tax consequences to Taxpayer?",
+    choices: [
+      "$50,000 gain and $0 COD income",
+      "$0 gain and $50,000 COD income",
+      "$50,000 gain and $50,000 COD income",
+      "No tax consequences"
+    ],
+    correct: 0,
+    feedback: "With recourse debt, the transaction is bifurcated. Step 1 (deemed sale): Amount realized = FMV = $350,000. Adjusted basis = $300,000. Gain = $50,000. Step 2 (debt forgiveness): The debt is $350,000 and the lender receives property worth $350,000 — the lender is paid in full. COD income = $0. Total: $50,000 gain, no COD income."
+  },
+  {
+    num: 6,
+    q: "Taxpayer purchased property for $400,000 ($50,000 cash and a $350,000 recourse mortgage). Taxpayer took $100,000 in depreciation, reducing adjusted basis to $300,000. The property declines in value to $280,000. The lender forecloses, credits $280,000 (FMV) toward the $350,000 debt, and forgives the remaining $70,000. What are the federal income tax consequences to Taxpayer?",
+    choices: [
+      "$20,000 loss and $0 COD income",
+      "$20,000 gain and $70,000 COD income",
+      "$20,000 loss and $70,000 COD income",
+      "$70,000 COD income only"
+    ],
+    correct: 2,
+    feedback: "With recourse debt, the transaction is bifurcated. Step 1 (deemed sale): Amount realized = FMV = $280,000. Adjusted basis = $300,000. Loss = $20,000. Step 2 (debt forgiveness): Debt outstanding = $350,000. Amount credited (FMV) = $280,000. Amount forgiven = $70,000. COD income = $70,000 under § 61(a)(11). Note: § 108 exclusions may reduce COD income if the taxpayer is insolvent or in bankruptcy, but absent those facts, $70,000 is included in gross income."
+  },
+  {
+    num: 7,
+    q: "Taxpayer purchased property for $300,000 (all recourse financing). Taxpayer took $80,000 in depreciation, reducing adjusted basis to $220,000. The property is now worth $200,000. At the time of foreclosure, Taxpayer's total assets (FMV) = $250,000 and total liabilities = $400,000 (insolvent by $150,000). The lender forecloses, credits $200,000 (FMV) toward the $300,000 debt, and forgives the remaining $100,000. What are the federal income tax consequences to Taxpayer?",
+    choices: [
+      "$20,000 loss and $100,000 COD income recognized",
+      "$20,000 loss and $0 COD income recognized (full exclusion under § 108)",
+      "$0 loss and $100,000 COD income recognized",
+      "$20,000 gain and $0 COD income"
+    ],
+    correct: 1,
+    feedback: "With recourse debt, the transaction is bifurcated. Step 1 (deemed sale): Amount realized = FMV = $200,000. Adjusted basis = $220,000. Loss = $20,000. Step 2 (debt forgiveness): COD income = $100,000. Under § 108(a)(1)(B), COD income is excluded to the extent the taxpayer is insolvent. Taxpayer is insolvent by $150,000, which exceeds the $100,000 of COD income. Therefore all $100,000 of COD income is excluded. Total: $20,000 loss; $0 COD income recognized."
+  },
+  {
+    num: 8,
+    q: "Taxpayer purchased property for $300,000 (all recourse financing). Taxpayer took $80,000 in depreciation, reducing adjusted basis to $220,000. The property is now worth $200,000. At the time of foreclosure, Taxpayer's total assets (FMV) = $320,000 and total liabilities = $400,000 (insolvent by $80,000). The lender forecloses, credits $200,000 (FMV) toward the $300,000 debt, and forgives the remaining $100,000. What are the federal income tax consequences to Taxpayer?",
+    choices: [
+      "$20,000 loss and $100,000 COD income recognized",
+      "$20,000 loss and $80,000 COD income recognized",
+      "$20,000 loss and $20,000 COD income recognized",
+      "$20,000 loss and $0 COD income recognized"
+    ],
+    correct: 2,
+    feedback: "With recourse debt, the transaction is bifurcated. Step 1 (deemed sale): Amount realized = FMV = $200,000. Adjusted basis = $220,000. Loss = $20,000. Step 2 (debt forgiveness): COD income = $100,000. Under § 108(a)(1)(B), the exclusion is limited to the amount of insolvency ($80,000). So $80,000 of COD income is excluded, and $20,000 is recognized. Total: $20,000 loss and $20,000 COD income recognized."
+  }
+];
+
+const state = { answers: Array(problems.length).fill(null), current: 0 };
+
+function buildNav() {
+  const nav = document.getElementById('nav');
+  nav.innerHTML = '';
+  problems.forEach((p, i) => {
+    const pill = document.createElement('button');
+    pill.className = 'pill';
+    pill.textContent = p.num;
+    if (i === state.current) pill.classList.add('current');
+    if (state.answers[i] !== null) {
+      pill.classList.add(state.answers[i] === problems[i].correct ? 'correct' : 'incorrect');
+    }
+    pill.onclick = () => { state.current = i; render(); };
+    nav.appendChild(pill);
+  });
+  const pct = Math.round((state.answers.filter(a => a !== null).length / problems.length) * 100);
+  document.getElementById('prog').style.width = pct + '%';
+}
+
+function render() {
+  buildNav();
+  const p = problems[state.current];
+  const answered = state.answers[state.current] !== null;
+  const selected = state.answers[state.current];
+
+  let choicesHTML = p.choices.map((c, i) => {
+    let cls = 'choice';
+    if (answered) {
+      if (i === p.correct) cls += ' correct-answer';
+      else if (i === selected && i !== p.correct) cls += ' wrong-answer';
+    }
+    return `<button class="${cls}" ${answered ? 'disabled' : ''} onclick="pick(${i})">${c}</button>`;
+  }).join('');
+
+  let feedbackHTML = '';
+  if (answered) {
+    const isRight = selected === p.correct;
+    feedbackHTML = `<div class="feedback ${isRight ? 'correct' : 'incorrect'}">
+      <div class="feedback-title">${isRight ? 'Correct!' : 'Not quite — here is the correct analysis:'}</div>
+      <div class="feedback-body">${p.feedback}</div>
+    </div>`;
+  }
+
+  const prevDisabled = state.current === 0 ? 'disabled' : '';
+  const nextDisabled = state.current === problems.length - 1 ? 'disabled' : '';
+
+  const allAnswered = state.answers.every(a => a !== null);
+  const correctCount = state.answers.filter((a, i) => a === problems[i].correct).length;
+
+  let scoreHTML = '';
+  if (allAnswered) {
+    const pct = Math.round((correctCount / problems.length) * 100);
+    scoreHTML = `<div class="divider"></div>
+    <div class="score-card">
+      <div class="score-num">${correctCount}/${problems.length}</div>
+      <div class="score-label">problems correct (${pct}%)</div>
+      <div style="margin-top:1rem;">
+        <button class="btn" onclick="restart()">Start over</button>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="q-label">Problem ${p.num} of ${problems.length}</div>
+    <div class="q-text">${p.q}</div>
+    <div class="choices">${choicesHTML}</div>
+    <div class="btn-row">
+      <button class="btn" ${prevDisabled} onclick="go(-1)">&#8592; Prev</button>
+      <button class="btn" ${nextDisabled} onclick="go(1)">Next &#8594;</button>
+    </div>
+    ${feedbackHTML}
+    ${scoreHTML}
+  `;
+}
+
+function pick(i) {
+  if (state.answers[state.current] !== null) return;
+  state.answers[state.current] = i;
+  render();
+}
+
+function go(dir) {
+  state.current = Math.max(0, Math.min(problems.length - 1, state.current + dir));
+  render();
+}
+
+function restart() {
+  state.answers = Array(problems.length).fill(null);
+  state.current = 0;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
